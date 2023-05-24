@@ -1,0 +1,34 @@
+Create a form with a text field for a list of graph edges and a dropdown selection of a graph class (TC, SF, O, TB, all).
+When the user submits the form, the server will return a list of all orientations of the graph that are within this class.
+The list is served as a selection box.
+This action of the server is done by calling the function _orientation_page from app.py.
+The user can then select one of the orientations and the server will return the corresponding graph.
+<!DocType html>
+<html>
+<head>
+    <title>Orientation</title>
+</head>
+<body>
+    <h1>Orientation</h1>
+    <form action="/orientation" method="get">
+        <label for="edges">Edges:</label>
+        <input type="text" id="edges" name="edges"><br><br>
+        <label for="class">Class:</label>
+        <select id="class" name="class">
+            <option value="TC">Tree-Child</option>
+            <option value="SF">Stack-Free</option>
+            <option value="O">Orchard</option>
+            <option value="TB">Tree-Based</option>
+            <option value="all">any</option>
+        </select><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Result</h2>
+    
+
+</body>
+
+
+
+</html>
