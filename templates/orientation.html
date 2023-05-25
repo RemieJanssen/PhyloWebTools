@@ -7,12 +7,16 @@ The user can then select one of the orientations and the server will return the 
 <html>
 <head>
     <title>Orientation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <h1>Orientation</h1>
     <form action="/orientation" method="get">
         <label for="edges">Edges:</label>
-        <input type="text" id="edges" name="edges"><br><br>
+        <textarea id="edges" name="edges" rows="10" cols="50">
+            {% for edge in edges %}{{edge}}
+            {% endfor %}
+        </textarea><br><br>
         <label for="class">Class:</label>
         <select id="class" name="class">
             <option value="TC">Tree-Child</option>
@@ -25,10 +29,30 @@ The user can then select one of the orientations and the server will return the 
     </form>
 
     <h2>Result</h2>
+    <ul class="dropdown-menu">
+        {% for orientation_edge_list in orientations %}
+        <li class="orientation"><a href="#">{{ orientation_edge_list }}</a></li>
+        {% endfor %}    
+    </ul>
+
+    <h3>Graph</h3>
+    <div id="graph">hi</div>
     
 
+
 </body>
-
-
+<script>
+    $('.orientation').on( 'click', 'a', function() {
+        var text = $(this).html();
+        const graph_url = "{{ url_for("_draw_oriented_network" ) }}?edges=" + text;
+        fetch(graph_url)
+            .then(response => response.text())
+            .then(svg => {
+                console.log(svg); 
+                document.getElementById("graph").innerHTML = svg;
+            }
+        );
+    });
+</script>
 
 </html>
