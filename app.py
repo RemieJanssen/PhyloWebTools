@@ -26,7 +26,7 @@ def _orientation_page():
     network_class = request.args.get("class", "")
     class_checker, chain_length = class_checker_dict.get(network_class, class_checker_dict["default"])
     if not edges:
-        return render_template("orientation.html", edges="", orientations="", network_class=network_class)
+        return render_template("orientation.html", edges="", orientations=None, network_class=network_class, show_results=False)
 
     edges = edges.splitlines()
     edges = [e.split() for e in edges]
@@ -34,26 +34,19 @@ def _orientation_page():
 
     network = nx.Graph(edges)
 
-    orientations = LevelStuff(network, chain_length, class_checker)
+    orientations = LevelStuff(network, chain_length, class_checker) or dict()
     oriented_networks = [OrientationAlgorithmBinary(network,rootEdge,reticulations) for rootEdge, reticulations in orientations.items()]
     oriented_networks_edge_lists = [json.dumps([e for e in oriented_network.edges]) for oriented_network in oriented_networks]
 
-    print(oriented_networks_edge_lists)
-
-    return render_template("orientation.html", edges=edges, orientations=oriented_networks_edge_lists, network_class=network_class)
+    return render_template("orientation.html", edges=edges, orientations=oriented_networks_edge_lists, network_class=network_class, show_results=True)
 
 @app.route("/draw_oriented_network")
 def _draw_oriented_network():
     """Takes a list of edges and returns a graphviz svg picture of the graph.
     Each node is labeled with its label.
     """
-    print()
     edges = request.args.get("edges", "[]")
-    print(edges)
     edges = json.loads(edges)
-    print(edges)
     network = nx.DiGraph(edges)
-    print(network.edges)
     network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="dot")
-    print(Markup(network_svg))
     return Markup(network_svg)

@@ -28,16 +28,20 @@ The user can then select one of the orientations and the server will return the 
         <input type="submit" value="Submit">
     </form>
 
+    {% if show_results %}
     <h2>Result</h2>
+
+
     <ul class="dropdown-menu">
         {% for orientation_edge_list in orientations %}
         <li class="orientation"><a href="#">{{ orientation_edge_list }}</a></li>
         {% endfor %}    
     </ul>
 
+
     <h3>Graph</h3>
-    <div id="graph">hi</div>
-    
+    <div id="graph"></div>
+    {% endif %}
 
 
 </body>
