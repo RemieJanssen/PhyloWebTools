@@ -1,8 +1,3 @@
-Create a form with a text field for a list of graph edges and a dropdown selection of a graph class (TC, SF, O, TB, all).
-When the user submits the form, the server will return a list of all orientations of the graph that are within this class.
-The list is served as a selection box.
-This action of the server is done by calling the function _orientation_page from app.py.
-The user can then select one of the orientations and the server will return the corresponding graph.
 <!DocType html>
 <html>
 <head>
@@ -11,11 +6,22 @@ The user can then select one of the orientations and the server will return the 
 </head>
 <body>
     <h1>Orientation</h1>
+    <p>
+        <b>Edges:</b> Enter the edges of the undirected network in the following format: <br>
+        <code>
+        1 2<br>
+        2 3<br>
+        3 4<br>
+        4 1<br>
+        1 3<br>
+        2 4</code>
+        <br>
+        <br>
+        <b>Class:</b> Choose a class of directed networks to restrict the orientations to. <br>
+    </p>
     <form action="/orientation" method="get">
         <label for="edges">Edges:</label>
         <textarea id="edges" name="edges" rows="10" cols="50">
-            {% for edge in edges %}{{edge}}
-            {% endfor %}
         </textarea><br><br>
         <label for="class">Class:</label>
         <select id="class" name="class">

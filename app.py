@@ -40,6 +40,19 @@ def _orientation_page():
 
     return render_template("orientation.html", edges=edges, orientations=oriented_networks_edge_lists, network_class=network_class, show_results=True)
 
+
+@app.route("/draw_undirected_network")
+def _draw_undirected_network():
+    """Takes a list of edges and returns a graphviz svg picture of the graph.
+    Each node is labeled with its label.
+    """
+    edges = request.args.get("edges", "[]")
+    edges = json.loads(edges)
+    network = nx.Graph(edges)
+    network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="neato").decode('ascii')
+    return Markup(network_svg)
+
+
 @app.route("/draw_oriented_network")
 def _draw_oriented_network():
     """Takes a list of edges and returns a graphviz svg picture of the graph.
