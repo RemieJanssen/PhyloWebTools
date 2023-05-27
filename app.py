@@ -34,11 +34,16 @@ def _orientation_page():
 
     network = nx.Graph(edges)
 
-    orientations = LevelStuff(network, chain_length, class_checker) or dict()
+    try:
+        orientations = LevelStuff(network, chain_length, class_checker) or dict()
+    except Exception as e:
+        return render_template("error.html", error="Are you sure your input is a valid binary undirected phylogenetic network?")
+
+
     oriented_networks = [OrientationAlgorithmBinary(network,rootEdge,reticulations) for rootEdge, reticulations in orientations.items()]
     oriented_networks_edge_lists = [json.dumps([e for e in oriented_network.edges]) for oriented_network in oriented_networks]
 
-    return render_template("orientation.html", edges=edges, orientations=oriented_networks_edge_lists, network_class=network_class, show_results=True)
+    return render_template("orientation.html", edges=json.dumps(edges), orientations=oriented_networks_edge_lists, network_class=network_class, show_results=True)
 
 
 @app.route("/draw_undirected_network")
@@ -48,6 +53,8 @@ def _draw_undirected_network():
     """
     edges = request.args.get("edges", "[]")
     edges = json.loads(edges)
+    # print(edges)
+    # print(type(edges))
     network = nx.Graph(edges)
     network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="neato").decode('ascii')
     return Markup(network_svg)
@@ -61,5 +68,6 @@ def _draw_oriented_network():
     edges = request.args.get("edges", "[]")
     edges = json.loads(edges)
     network = nx.DiGraph(edges)
-    network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="dot").decode('ascii')
+    graphviz_network = nx.nx_agraph.to_agraph(network)
+    network_svg = graphviz_network.draw(format="svg", prog="dot").decode('ascii')
     return Markup(network_svg)

@@ -3,53 +3,74 @@
 <head>
     <title>Orientation</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .flex-container {
+          display: flex;
+        }
+
+        .flex-container > div {
+          margin: 10px;
+          padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Orientation</h1>
-    <p>
-        <b>Edges:</b> Enter the edges of the undirected network in the following format: <br>
-        <code>
-        0 1<br>
-        1 2<br>
-        1 3<br>
-        2 3<br>
-        2 4<br>
-        4 5</code>
-        <br>
-        <br>
-        <b>Class:</b> Choose a class of directed networks to restrict the orientations to. <br>
-    </p>
-    <form action="/orientation" method="get">
-        <label for="edges">Edges:</label>
-        <textarea id="edges" name="edges" rows="10" cols="50">
-        </textarea><br><br>
-        <label for="class">Class:</label>
-        <select id="class" name="class">
-            <option value="TC">Tree-Child</option>
-            <option value="SF">Stack-Free</option>
-            <option value="O">Orchard</option>
-            <option value="TB">Tree-Based</option>
-            <option value="all">any</option>
-        </select><br><br>
-        <input type="submit" value="Submit">
-    </form>
+    <div class="flex-container">
+        <div>
+            <h1>Input</h1>
+            <p>
+                <b>Edges:</b> Enter the edges of the undirected network in the following format: <br>
+                <code>
+                0 1<br>
+                1 2<br>
+                1 3<br>
+                2 3<br>
+                2 4<br>
+                3 5</code>
+                <br>
+                <br>
+                <b>Class:</b> Choose a class of directed networks to restrict the orientations to. <br>
+            </p>
+            <form action="/orientation" method="get">
+                <label for="edges">Edges:</label>
+                <textarea id="edges" name="edges" rows="10" cols="50"></textarea>
+                <br><br>
+                <label for="class">Class:</label>
+                <select id="class" name="class">
+                    <option value="TC">Tree-Child</option>
+                    <option value="SF">Stack-Free</option>
+                    <option value="O">Orchard</option>
+                    <option value="TB">Tree-Based</option>
+                    <option value="all">any</option>
+                </select><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div>
+            <h3>Input graph</h3>
+            <div id="undirected-network"></div>
+        </div>
+    </div>
 
     {% if show_results %}
     <h2>Result</h2>
 
-
-    <ul class="dropdown-menu">
-        {% for orientation_edge_list in orientations %}
-        <li class="orientation"><a href="#">{{ orientation_edge_list }}</a></li>
-        {% endfor %}    
-    </ul>
-
-
-    <h3>Graph</h3>
-    <div id="graph"></div>
+    <div class="flex-container">
+        <div>
+            <h3>Orientations</h3>
+            
+            <ul>
+                {% for orientation_edge_list in orientations %}
+                <li class="orientation"><a href="#">{{ orientation_edge_list }}</a></li>
+                {% endfor %}    
+            </ul>
+        </div>
+        <div>
+            <h3>Graph</h3>
+            <div id="graph"></div>
+        </div>
+    </div>
     {% endif %}
-
-
 </body>
 <script>
     $('.orientation').on( 'click', 'a', function() {
@@ -60,9 +81,20 @@
             .then(svg => {
                 console.log(svg); 
                 document.getElementById("graph").innerHTML = svg;
-            }
-        );
+            });
+    });
+
+    $(document).ready(function() {
+        const edges = '{{ edges | safe }}';
+        console.log(edges);
+        const graph_url = "{{ url_for('_draw_undirected_network') }}?edges=" + edges;
+        console.log(graph_url);
+        fetch(graph_url)
+            .then(response => response.text())
+            .then(svg => {
+                    console.log(svg); 
+                    document.getElementById("undirected-network").innerHTML = svg;
+            });
     });
 </script>
-
 </html>
