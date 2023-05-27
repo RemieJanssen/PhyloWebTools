@@ -48,5 +48,5 @@ def _draw_oriented_network():
     edges = request.args.get("edges", "[]")
     edges = json.loads(edges)
     network = nx.DiGraph(edges)
-    network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="dot")
+    network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="dot").decode('ascii')
     return Markup(network_svg)

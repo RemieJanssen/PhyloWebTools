@@ -48,7 +48,7 @@ The user can then select one of the orientations and the server will return the 
 <script>
     $('.orientation').on( 'click', 'a', function() {
         var text = $(this).html();
-        const graph_url = "{{ url_for("_draw_oriented_network" ) }}?edges=" + text;
+        const graph_url = "{{ url_for('_draw_oriented_network') }}?edges=" + text;
         fetch(graph_url)
             .then(response => response.text())
             .then(svg => {
