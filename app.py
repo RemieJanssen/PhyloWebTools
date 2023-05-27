@@ -1,7 +1,8 @@
-from flask import Flask, request, render_template, Markup
+from flask import Flask, request, render_template, Markup, url_for
 from rooting import *
 import networkx as nx
 import json
+from urllib.parse import unquote
 
 app = Flask(__name__)
 
@@ -26,24 +27,41 @@ def _orientation_page():
     network_class = request.args.get("class", "")
     class_checker, chain_length = class_checker_dict.get(network_class, class_checker_dict["default"])
     if not edges:
-        return render_template("orientation.html", edges="", orientations=None, network_class=network_class, show_results=False)
+        return render_template("orientation.html", edges="", network_class=network_class, data_url="", show_results=False)
 
     edges = edges.splitlines()
     edges = [e.split() for e in edges]
     edges = [(e[0], e[1]) for e in edges]
 
+    data_url = url_for("_get_orientations", edges=json.dumps(edges), network_class=network_class)
+
+    return render_template("orientation.html", data_url=data_url, edges=json.dumps(edges), show_results=True)
+
+@app.route("/get_orientations")
+def _get_orientations():
+    edges = request.args.get("edges", "[]")
+    edges = unquote(edges)
+    edges = json.loads(edges)
+    if not edges:
+        return json.dumps([])
+
+    network_class = request.args.get("network_class", "")
+    class_checker, chain_length = class_checker_dict.get(network_class, class_checker_dict["default"])
+
     network = nx.Graph(edges)
 
-    try:
-        orientations = LevelStuff(network, chain_length, class_checker) or dict()
-    except Exception as e:
-        return render_template("error.html", error="Are you sure your input is a valid binary undirected phylogenetic network?")
-
-
+    orientations = LevelStuff(network, chain_length, class_checker) or dict()
     oriented_networks = [OrientationAlgorithmBinary(network,rootEdge,reticulations) for rootEdge, reticulations in orientations.items()]
     oriented_networks_edge_lists = [json.dumps([e for e in oriented_network.edges]) for oriented_network in oriented_networks]
 
-    return render_template("orientation.html", edges=json.dumps(edges), orientations=oriented_networks_edge_lists, network_class=network_class, show_results=True)
+    results = []
+    for (root, reticulations), edge_list in zip(orientations.items(), oriented_networks_edge_lists):
+        results.append({
+            "root": root,
+            "reticulations": reticulations,
+            "edges": edge_list,
+        })
+    return json.dumps(results)
 
 
 @app.route("/draw_undirected_network")
@@ -53,8 +71,6 @@ def _draw_undirected_network():
     """
     edges = request.args.get("edges", "[]")
     edges = json.loads(edges)
-    # print(edges)
-    # print(type(edges))
     network = nx.Graph(edges)
     network_svg = nx.nx_agraph.to_agraph(network).draw(format="svg", prog="neato").decode('ascii')
     return Markup(network_svg)
