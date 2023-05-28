@@ -28,8 +28,9 @@
 </head>
 <body>
     <div class="flex-container">
+        <h2>Input</h2>
         <div>
-            <h1>Input</h1>
+            <h3>Form</h3>
             <p>
                 <b>Edges:</b> Enter the edges of the undirected network in the following format: <br>
                 <code>
@@ -59,15 +60,14 @@
             </form>
         </div>
         <div>
-            <h3>Input graph</h3>
+            <h3>Graph</h3>
             <div id="undirected-network"></div>
         </div>
     </div>
 
     {% if show_results %}
-    <h2>Result</h2>
-
     <div class="flex-container">
+        <h2>Result</h2>
         <div>
             <h3>Orientations</h3>
             <table
@@ -95,7 +95,7 @@
 <script>
     $(document).ready(function() {
         const edges = '{{ edges | safe }}';
-        const graph_url = "{{ url_for('_draw_undirected_network') }}?edges=" + edges;
+        const graph_url = "{{ url_for('draw_graph._draw_undirected_network') }}?edges=" + edges;
         fetch(graph_url)
             .then(response => response.text())
             .then(svg => {
@@ -104,7 +104,7 @@
     });
 
     $("#results_table").on('click-row.bs.table', function (e, row, $element) {
-        const graph_url = "{{ url_for('_draw_oriented_network') }}?edges=" + row.edges;
+        const graph_url = "{{ url_for('draw_graph._draw_oriented_network') }}?edges=" + row.edges;
         fetch(graph_url)
             .then(response => response.text())
             .then(svg => {
