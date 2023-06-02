@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for, Blueprint
-from .rooting import *
+from phyloroot import *
 import networkx as nx
 import json
 from urllib.parse import unquote
