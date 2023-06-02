@@ -1,0 +1,19 @@
+name: phylo-web-tools
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - python
+  - pip:
+    - scipy
+    - numpy
+    - pytest
+    - pytest-cov
+    - pandas
+    - black
+    - flask
+    - networkx
+    - pygraphviz
+    - phyloroot
