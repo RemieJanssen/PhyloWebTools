@@ -4,12 +4,13 @@ services:
   # note; symlink docker-compose.development.yml to
   # docker-compose.override.yml when developing.
 
-  web:
+  phylowebtools:
     build: .
     image: phylowebtools
     environment:
       FLASK_APP: /app/app.py
-    command: /bin/bash -c ". /venv/bin/activate && flask run"
+      FLASK_HOST: "0.0.0.0"
+    command: /bin/bash -c ". /venv/bin/activate && flask run --host 0.0.0.0"
     ports:
       - 5000:5000
     restart: unless-stopped

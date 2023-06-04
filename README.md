@@ -3,12 +3,19 @@ Web-based tools for phylogenetic networks
 
 ## Run
 
+### locally
+
 First build and activate the conda environment defined in `envs/phylo-web-tools.source.yml`.
 Then run the tool with the command `flask run`.
 
+### docker
+
+Run with `docker-compose up --build`
+Enter the container with: `docker-compose run phylowebtools /bin/bash`
+
 ## Dev
 
-### Conda lock
+### Conda pin versions
 Lock/pin the package versions
 ```
 cd ./envs
