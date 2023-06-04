@@ -9,8 +9,7 @@ services:
     image: phylowebtools
     environment:
       FLASK_APP: /app/app.py
-    command: source /venv/bin/activate && flask run
-    # Expose port 5000 to the outside world via port 5000 of the host machine
+    command: /bin/bash -c ". /venv/bin/activate && flask run"
     ports:
       - 5000:5000
     restart: unless-stopped
