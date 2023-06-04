@@ -7,6 +7,8 @@ dependencies:
   - pip
   - python
   - flask
+  - graphviz
+  - pygraphviz
   - pip:
     - scipy
     - numpy
@@ -15,5 +17,4 @@ dependencies:
     - pandas
     - black
     - networkx
-    - pygraphviz
     - phyloroot
