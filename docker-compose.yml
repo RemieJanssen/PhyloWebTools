@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  # note; symlink docker-compose.development.yml to
+  # docker-compose.override.yml when developing.
+
+  web:
+    build: .
+    image: phylowebtools
+    command: flask run
+    # Expose port 5000 to the outside world via port 7773 of the host machine
+    ports:
+      - 7773:5000
+    restart: unless-stopped
