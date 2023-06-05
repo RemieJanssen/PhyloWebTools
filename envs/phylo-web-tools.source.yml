@@ -6,6 +6,9 @@ channels:
 dependencies:
   - pip
   - python
+  - flask
+  - graphviz
+  - pygraphviz
   - pip:
     - scipy
     - numpy
@@ -13,7 +16,6 @@ dependencies:
     - pytest-cov
     - pandas
     - black
-    - flask
     - networkx
-    - pygraphviz
     - phyloroot
+    - gunicorn
