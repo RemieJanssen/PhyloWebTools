@@ -1,12 +1,12 @@
 # The build-stage image:
-FROM continuumio/miniconda3:23.3.1-0 AS build
+FROM condaforge/mambaforge:23.1.0-1 AS build
 
 # Install conda-pack:
-RUN conda install -c conda-forge conda-pack
+RUN mamba install -c conda-forge conda-pack
 
 # Install the package as normal:
 COPY ./envs/phylo-web-tools.source.yml environment.yml
-RUN conda env create -f environment.yml
+RUN mamba env create -f environment.yml
 
 # Use conda-pack to create a standalone enviornment
 # in /venv:
