@@ -10,7 +10,7 @@ services:
     environment:
       FLASK_APP: /app/app.py
       FLASK_HOST: "0.0.0.0"
-    command: /bin/bash -c ". /venv/bin/activate && flask run --host 0.0.0.0"
+    command: /bin/bash -c ". /venv/bin/activate && gunicorn -w 4 -b 0.0.0.0 'app:app'"  
     ports:
-      - 5000:5000
+      - 5000:8000
     restart: unless-stopped
